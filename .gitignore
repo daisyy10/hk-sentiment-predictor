@@ -1,0 +1,15 @@
+
+.env
+
+# python virtual environment
+venv/
+__pycache__/
+*.pyc
+
+# raw scraped data
+data/*.json
+data/*.csv
+!data/.gitkeep
+
+# editor
+.vscode/
