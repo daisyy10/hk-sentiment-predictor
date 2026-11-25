@@ -1,0 +1,6 @@
+ticker,asset_name,as_of_date,last_close,pred_close_next_day,pred_change_pct
+3690.HK,Meituan,2026-11-25,61.45,61.11,-0.56
+0700.HK,Tencent,2026-11-25,337.4,336.52,-0.26
+0005.HK,HSBC,2026-11-25,128.6,126.86,-1.35
+1810.HK,Xiaomi,2026-11-25,26.56,26.37,-0.72
+9988.HK,Alibaba,2026-11-25,81.2,80.98,-0.27

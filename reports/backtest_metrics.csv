@@ -1,0 +1,4 @@
+model,MAPE_%,direction_acc_%
+Naive (tomorrow = today),2.138,
+"Ridge, price only",2.157,49.3
+"Ridge, price + sentiment",2.174,50.0
