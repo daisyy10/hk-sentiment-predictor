@@ -94,8 +94,10 @@ def chart_prices():
     fig.update_layout(
                 title=dict(text=f"{summary['label'].iloc[0]} - last 90 days",
                    x=1, xanchor="right"),
-        updatemenus=[dict(buttons=buttons, direction="down",
-                          x=0, y=1.22, xanchor="left")],
+                updatemenus=[dict(buttons=buttons, direction="down",
+                          x=0, y=1.22, xanchor="left",
+                          bgcolor="#ffffff", bordercolor="#aaaaaa",
+                          font=dict(color="#222222"))],
         xaxis_rangeslider_visible=False, height=480,
         margin=dict(t=90, b=40, l=50, r=20),
         legend=dict(orientation="h", y=-0.15))
