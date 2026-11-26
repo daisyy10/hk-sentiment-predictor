@@ -46,7 +46,7 @@ Walk-forward test on the last 30 trading days (150 predictions, 5 stocks pooled)
 
 Neither model beat the naive baseline. Only 10 of the 150 test rows had any sentiment, so this test cannot say whether sentiment helps. I am reporting it as it is.
 
-Next-day check (26 Nov 2026): see `reports/prediction_check.csv`.
+Next-day check (26 Nov 2026, 5 stocks): average error was 1.55% for the model against 0.99% for the naive baseline (tomorrow = today). The model called the direction correctly for 1 of 5 stocks. It predicted a fall for all five, but four of them rose. Five predictions are too few to conclude anything, and the result agrees with the walk-forward test, where the model did not beat the baseline either. Details: `reports/prediction_check.csv`.
 
 ## Limitations
 
