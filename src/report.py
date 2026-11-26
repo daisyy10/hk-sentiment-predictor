@@ -90,10 +90,10 @@ def chart_prices():
             vis[4 * i + k] = True
         buttons.append(dict(
             label=r["label"], method="update",
-            args=[{"visible": vis}, {"title": f"{r['label']} - last 90 days"}]))
-
+                        args=[{"visible": vis}, {"title.text": f"{r['label']} - last 90 days"}]))
     fig.update_layout(
-        title=f"{summary['label'].iloc[0]} - last 90 days",
+                title=dict(text=f"{summary['label'].iloc[0]} - last 90 days",
+                   x=1, xanchor="right"),
         updatemenus=[dict(buttons=buttons, direction="down",
                           x=0, y=1.22, xanchor="left")],
         xaxis_rangeslider_visible=False, height=480,
