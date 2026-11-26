@@ -1,0 +1,6 @@
+ticker,last_close,predicted,actual,error_%,direction_correct
+3690.HK,61.45,61.11,62.7,2.54,False
+0700.HK,337.4,336.52,341.0,1.31,False
+0005.HK,128.6,126.86,128.4,1.2,True
+1810.HK,26.56,26.37,26.6,0.86,False
+9988.HK,81.2,80.98,82.5,1.84,False
