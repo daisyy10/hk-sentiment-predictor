@@ -219,14 +219,25 @@ body.dark .src { background: #2b323d; color: #cdd3dc; }
 body.dark .tag.dark { background: #e6e9ee; color: #12161c; }
 body.dark .rng-bar { background: linear-gradient(90deg, #1d5a35, #333b46, #6b2a2a); }
 body.dark .rng-bar i { background: #e6e9ee; border-color: #1c222b; }
+
+.hero { background: linear-gradient(135deg, #1b2a49, #2e5090 60%, #1b9e4b); color: #fff; border-radius: 14px; padding: 26px 28px; margin-bottom: 18px; }
+.hero h1 { margin: 0 0 6px; font-size: 30px; letter-spacing: .3px; }
+.hero p { margin: 0; opacity: .88; font-size: 14px; }
+.chips { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { background: rgba(255,255,255,.18); padding: 4px 12px; border-radius: 14px; font-size: 12px; }
+
 #themeBtn { position: fixed; top: 12px; right: 14px; z-index: 10; border: 1px solid #aaa; background: #fff; color: #222; padding: 6px 12px; border-radius: 18px; cursor: pointer; }
 body.dark #themeBtn { background: #1c222b; color: #e6e9ee; border-color: #555; }
 </style></head><body>
 <button id="themeBtn" onclick="toggleTheme()">Dark mode</button>
-<h1>Hong Kong (HKEX) Sentiment Report</h1>
-<p class="note">Generated __NOW__. Click a column header to sort. Educational project, not financial advice.</p>
+<div class="hero">
+<h1>HK Retail Sentiment Radar</h1>
+<p>What Hong Kong forums and news say about 5 big HKEX stocks, and where the price may go next.</p>
+<div class="chips"><span class="chip">5 stocks</span><span class="chip">LIHKG + AAStocks + Exa</span><span class="chip">Last 10 days</span><span class="chip">Updated __NOW__</span></div>
+</div>
+<p class="note">Click a column header to sort. Educational project, not financial advice.</p>
 <div class="cards">__CARDS__</div>
-<h2>Ranked table</h2>
+<h2>Stocks at a glance</h2>
 <p>Filter:
 <button class="btn on" data-d="ALL" onclick="filterDir('ALL')">All</button>
 <button class="btn" data-d="BULLISH" onclick="filterDir('BULLISH')">Bullish</button>
