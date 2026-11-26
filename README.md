@@ -83,4 +83,4 @@ python src/predict.py
 python src/check_prediction.py
 ```
 
-Apify actors are pay-per-event; a full run cost about $1 of the free credit.
+Apify actors are pay-per-event; the runs for this project cost about $0.92 of the free credit.
