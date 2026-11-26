@@ -199,7 +199,28 @@ table.plain th { cursor: default; }
 .flag { background: #ffe9a8; font-weight: bold; }
 .btn { border: 1px solid #aaa; background: #fff; padding: 5px 12px; margin-right: 6px; border-radius: 16px; cursor: pointer; }
 .btn.on { background: #222; color: #fff; }
+body.dark { background: #12161c; color: #e6e9ee; }
+body.dark .note, body.dark .sub, body.dark .card span, body.dark .rng-l { color: #9aa4b2; }
+body.dark .card { background: #1c222b; }
+body.dark .sc { background: #1c222b; border-color: #2b323d; box-shadow: none; }
+body.dark th { background: #262d38; color: #e6e9ee; }
+body.dark th:hover { background: #303846; }
+body.dark th, body.dark td { border-color: #2f3743; }
+body.dark .BULLISH { background: #1d5a35; }
+body.dark .BEARISH { background: #6b2a2a; }
+body.dark .NEUTRAL { background: #333b46; }
+body.dark .flag { background: #7a5a00; }
+body.dark .btn { background: #1c222b; color: #e6e9ee; border-color: #444; }
+body.dark .btn.on { background: #e6e9ee; color: #12161c; }
+body.dark details.ev { border-color: #2f3743; }
+body.dark .src { background: #2b323d; color: #cdd3dc; }
+body.dark .tag.dark { background: #e6e9ee; color: #12161c; }
+body.dark .rng-bar { background: linear-gradient(90deg, #1d5a35, #333b46, #6b2a2a); }
+body.dark .rng-bar i { background: #e6e9ee; border-color: #1c222b; }
+#themeBtn { position: fixed; top: 12px; right: 14px; z-index: 10; border: 1px solid #aaa; background: #fff; color: #222; padding: 6px 12px; border-radius: 18px; cursor: pointer; }
+body.dark #themeBtn { background: #1c222b; color: #e6e9ee; border-color: #555; }
 </style></head><body>
+<button id="themeBtn" onclick="toggleTheme()">Dark mode</button>
 <h1>Hong Kong (HKEX) Sentiment Report</h1>
 <p class="note">Generated __NOW__. Click a column header to sort. Educational project, not financial advice.</p>
 <div class="cards">__CARDS__</div>
@@ -239,6 +260,36 @@ function filterDir(d) {
     b.classList.toggle("on", b.dataset.d === d);
   });
 }
+</script>
+<script>
+function applyTheme(dark) {
+  document.body.classList.toggle("dark", dark);
+  document.getElementById("themeBtn").textContent = dark ? "Light mode" : "Dark mode";
+  var font = dark ? "#e6e9ee" : "#222";
+  var grid = dark ? "#2f3743" : "#e3e6ea";
+  document.querySelectorAll(".plotly-graph-div").forEach(function (g) {
+    try {
+      Plotly.relayout(g, {
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        "font.color": font,
+        "xaxis.gridcolor": grid,
+        "yaxis.gridcolor": grid
+      });
+    } catch (e) {}
+  });
+}
+function toggleTheme() {
+  var dark = !document.body.classList.contains("dark");
+  try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+  applyTheme(dark);
+}
+window.addEventListener("load", function () {
+  var saved = null;
+  try { saved = localStorage.getItem("theme"); } catch (e) {}
+  var dark = saved ? saved === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+  applyTheme(dark);
+});
 </script>
 </body></html>"""
 
