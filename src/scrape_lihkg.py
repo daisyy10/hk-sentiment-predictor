@@ -32,7 +32,7 @@ def fetch_once(info):
         "order": "desc_create_time",
         "dateFrom": "10d",
         "maxItems": MAX_ITEMS,
-                "proxyConfiguration": {
+        "proxyConfiguration": {
             "useApifyProxy": True,
             "apifyProxyGroups": ["RESIDENTIAL"],
         },

@@ -15,13 +15,21 @@ def fetch_prices(ticker, name):
     df = yf.Ticker(ticker).history(period="6mo")
     df = df.reset_index()
     df["Date"] = pd.to_datetime(df["Date"]).dt.date
-    df = df.rename(columns={
-        "Date": "date", "Open": "open", "High": "high",
-        "Low": "low", "Close": "close", "Volume": "volume",
-    })
+    df = df.rename(
+        columns={
+            "Date": "date",
+            "Open": "open",
+            "High": "high",
+            "Low": "low",
+            "Close": "close",
+            "Volume": "volume",
+        }
+    )
     df["ticker"] = ticker
     df["asset_name"] = name
-    return df[["date", "ticker", "asset_name", "open", "high", "low", "close", "volume"]]
+    return df[
+        ["date", "ticker", "asset_name", "open", "high", "low", "close", "volume"]
+    ]
 
 
 def main():

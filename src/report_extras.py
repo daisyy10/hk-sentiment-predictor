@@ -42,8 +42,10 @@ def sparkline(values, w=110, h=34):
         for i, v in enumerate(values)
     )
     color = "#1b9e4b" if values[-1] >= values[0] else "#d64545"
-    return (f'<svg width="{w}" height="{h}"><polyline fill="none" '
-            f'stroke="{color}" stroke-width="2" points="{pts}"/></svg>')
+    return (
+        f'<svg width="{w}" height="{h}"><polyline fill="none" '
+        f'stroke="{color}" stroke-width="2" points="{pts}"/></svg>'
+    )
 
 
 def stock_cards():
@@ -77,40 +79,57 @@ def heatmap_html():
     pv = d.pivot(index="ticker", columns="trade_date", values="score")
     pv = pv.reindex(summary["ticker"])
     names = dict(zip(summary["ticker"], summary["asset_name"]))
-    fig = go.Figure(go.Heatmap(
-        z=pv.values,
-        x=[str(c)[:10] for c in pv.columns],
-        y=[names[t] for t in pv.index],
-        colorscale="RdYlGn", zmin=-1, zmax=1,
-        colorbar=dict(title="Sentiment"),
-        hovertemplate="%{y}<br>%{x}<br>score %{z:.2f}<extra></extra>",
-    ))
+    fig = go.Figure(
+        go.Heatmap(
+            z=pv.values,
+            x=[str(c)[:10] for c in pv.columns],
+            y=[names[t] for t in pv.index],
+            colorscale="RdYlGn",
+            zmin=-1,
+            zmax=1,
+            colorbar=dict(title="Sentiment"),
+            hovertemplate="%{y}<br>%{x}<br>score %{z:.2f}<extra></extra>",
+        )
+    )
     fig.update_xaxes(type="category")
-    fig.update_layout(title="Daily sentiment heatmap (social + news)",
-                      height=320, margin=dict(t=60, b=40, l=80, r=20))
-    return ("<h2>Sentiment heatmap</h2>"
-            + fig.to_html(full_html=False, include_plotlyjs=False,
-                          config={"displayModeBar": False})
-            + '<p class="note">Blank cell = no posts or news that day.</p>')
+    fig.update_layout(
+        title="Daily sentiment heatmap (social + news)",
+        height=320,
+        margin=dict(t=60, b=40, l=80, r=20),
+    )
+    return (
+        "<h2>Sentiment heatmap</h2>"
+        + fig.to_html(
+            full_html=False, include_plotlyjs=False, config={"displayModeBar": False}
+        )
+        + '<p class="note">Blank cell = no posts or news that day.</p>'
+    )
 
 
 def evidence_html():
     it_all = items.copy()
     it_all["text"] = it_all["text"].fillna("").astype(str)
     it_all["impact"] = it_all["score"].abs() * it_all["weight"]
-    out = ('<h2>Evidence behind the scores</h2>'
-           '<p class="note">Strongest items per stock. Click a stock to expand.</p>')
+    out = (
+        "<h2>Evidence behind the scores</h2>"
+        '<p class="note">Strongest items per stock. Click a stock to expand.</p>'
+    )
     for _, r in summary.iterrows():
-        it = it_all[(it_all["ticker"] == r["ticker"])
-                    & (it_all["text"].str.strip() != "")]
+        it = it_all[
+            (it_all["ticker"] == r["ticker"]) & (it_all["text"].str.strip() != "")
+        ]
         it = it.sort_values("impact", ascending=False).head(6)
         rows = ""
         for _, x in it.iterrows():
             s = x["score"]
             col = "#1b9e4b" if s > 0.15 else "#d64545" if s < -0.15 else "#888"
             snippet = html.escape(x["text"].strip().replace("\n", " ")[:160])
-            rows += (f'<li><span class="tag" style="background:{col}">{s:+.2f}</span> '
-                     f'<span class="src">{x["source"]}</span>{snippet}</li>')
-        out += (f'<details class="ev"><summary><b>{html.escape(r["asset_name"])}</b> '
-                f'({r["ticker"]}) - top {len(it)} items</summary><ul>{rows}</ul></details>')
+            rows += (
+                f'<li><span class="tag" style="background:{col}">{s:+.2f}</span> '
+                f'<span class="src">{x["source"]}</span>{snippet}</li>'
+            )
+        out += (
+            f'<details class="ev"><summary><b>{html.escape(r["asset_name"])}</b> '
+            f'({r["ticker"]}) - top {len(it)} items</summary><ul>{rows}</ul></details>'
+        )
     return out

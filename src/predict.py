@@ -13,14 +13,22 @@ def build_features():
     prices = pd.read_csv("data/prices.csv", parse_dates=["date"])
     sent = pd.read_csv("data/daily_sentiment.csv", parse_dates=["trade_date"])
 
-    social = (sent[sent["source"] == "lihkg"]
-              .groupby(["ticker", "trade_date"])["score"].mean()
-              .rename("social_sent").reset_index()
-              .rename(columns={"trade_date": "date"}))
-    news = (sent[sent["source"] != "lihkg"]
-            .groupby(["ticker", "trade_date"])["score"].mean()
-            .rename("news_sent").reset_index()
-            .rename(columns={"trade_date": "date"}))
+    social = (
+        sent[sent["source"] == "lihkg"]
+        .groupby(["ticker", "trade_date"])["score"]
+        .mean()
+        .rename("social_sent")
+        .reset_index()
+        .rename(columns={"trade_date": "date"})
+    )
+    news = (
+        sent[sent["source"] != "lihkg"]
+        .groupby(["ticker", "trade_date"])["score"]
+        .mean()
+        .rename("news_sent")
+        .reset_index()
+        .rename(columns={"trade_date": "date"})
+    )
 
     frames = []
     for ticker, p in prices.groupby("ticker"):
@@ -64,8 +72,11 @@ def evaluate(test, pred_ret, name):
         dir_acc = None  # naive ke paas koi direction nahi hoti
     else:
         dir_acc = (np.sign(pred_ret) == np.sign(test["target"])).mean() * 100
-    return {"model": name, "MAPE_%": round(mape, 3),
-            "direction_acc_%": None if dir_acc is None else round(dir_acc, 1)}
+    return {
+        "model": name,
+        "MAPE_%": round(mape, 3),
+        "direction_acc_%": None if dir_acc is None else round(dir_acc, 1),
+    }
 
 
 def main():
@@ -86,11 +97,16 @@ def main():
     res = pd.DataFrame(results)
     res.to_csv("reports/backtest_metrics.csv", index=False)
 
-    print(f"Out-of-sample test: last {TEST_DAYS} trading days, "
-          f"{len(test)} predictions (5 stocks pooled)")
+    print(
+        f"Out-of-sample test: last {TEST_DAYS} trading days, "
+        f"{len(test)} predictions (5 stocks pooled)"
+    )
     print(res.to_string(index=False))
-    print("Always-up baseline direction acc:",
-          round((test["target"] > 0).mean() * 100, 1), "%")
+    print(
+        "Always-up baseline direction acc:",
+        round((test["target"] > 0).mean() * 100, 1),
+        "%",
+    )
 
     has_sent = (test[SENT_FEATS] != 0).any(axis=1)
     print(f"Test rows that actually had sentiment: {has_sent.sum()} of {len(test)}")
@@ -99,9 +115,19 @@ def main():
     final = make_model().fit(labelled[all_feats], labelled["target"])
     latest = df.sort_values("date").groupby("ticker").tail(1).copy()
     latest["pred_change_pct"] = final.predict(latest[all_feats]) * 100
-    latest["pred_close_next_day"] = latest["close"] * (1 + latest["pred_change_pct"] / 100)
-    out = latest[["ticker", "asset_name", "date", "close",
-                                    "pred_close_next_day", "pred_change_pct"]]
+    latest["pred_close_next_day"] = latest["close"] * (
+        1 + latest["pred_change_pct"] / 100
+    )
+    out = latest[
+        [
+            "ticker",
+            "asset_name",
+            "date",
+            "close",
+            "pred_close_next_day",
+            "pred_change_pct",
+        ]
+    ]
     for c in ["last_close", "pred_close_next_day", "pred_change_pct"]:
         out[c] = out[c].round(2)
     out = out.rename(columns={"date": "as_of_date", "close": "last_close"})

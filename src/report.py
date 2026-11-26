@@ -36,28 +36,49 @@ def fig_html(fig, first=False):
 
 def chart_mentions():
     fig = go.Figure()
-    fig.add_bar(x=summary["label"], y=summary["social_mentions"],
-                name="Social (LIHKG)", marker_color=ORANGE)
-    fig.add_bar(x=summary["label"], y=summary["news_mentions"],
-                name="News (Exa + AAStocks)", marker_color=BLUE)
-    fig.update_layout(barmode="stack", title="Mentions per stock (last 10 days)",
-                      yaxis_title="Mentions", height=380,
-                      margin=dict(t=60, b=40, l=50, r=20),
-                      legend=dict(orientation="h", y=-0.2))
+    fig.add_bar(
+        x=summary["label"],
+        y=summary["social_mentions"],
+        name="Social (LIHKG)",
+        marker_color=ORANGE,
+    )
+    fig.add_bar(
+        x=summary["label"],
+        y=summary["news_mentions"],
+        name="News (Exa + AAStocks)",
+        marker_color=BLUE,
+    )
+    fig.update_layout(
+        barmode="stack",
+        title="Mentions per stock (last 10 days)",
+        yaxis_title="Mentions",
+        height=380,
+        margin=dict(t=60, b=40, l=50, r=20),
+        legend=dict(orientation="h", y=-0.2),
+    )
     return fig
 
 
 def chart_sentiment():
     fig = go.Figure()
-    fig.add_bar(x=summary["label"], y=summary["social_sentiment"],
-                name="Social (LIHKG)", marker_color=ORANGE)
-    fig.add_bar(x=summary["label"], y=summary["news_sentiment"],
-                name="News", marker_color=BLUE)
+    fig.add_bar(
+        x=summary["label"],
+        y=summary["social_sentiment"],
+        name="Social (LIHKG)",
+        marker_color=ORANGE,
+    )
+    fig.add_bar(
+        x=summary["label"], y=summary["news_sentiment"], name="News", marker_color=BLUE
+    )
     fig.add_hline(y=0, line_color="black", line_width=1)
-    fig.update_layout(barmode="group", title="Social vs news sentiment",
-                      yaxis=dict(title="Sentiment (-1 to +1)", range=[-1, 1]),
-                      height=380, margin=dict(t=60, b=40, l=50, r=20),
-                      legend=dict(orientation="h", y=-0.2))
+    fig.update_layout(
+        barmode="group",
+        title="Social vs news sentiment",
+        yaxis=dict(title="Sentiment (-1 to +1)", range=[-1, 1]),
+        height=380,
+        margin=dict(t=60, b=40, l=50, r=20),
+        legend=dict(orientation="h", y=-0.2),
+    )
     return fig
 
 
@@ -69,18 +90,44 @@ def chart_prices():
         sma = p["close"].rolling(10).mean()
         show = i == 0
         x_ends = [p["date"].iloc[0], p["date"].iloc[-1]]
-        fig.add_trace(go.Candlestick(
-            x=p["date"], open=p["open"], high=p["high"], low=p["low"],
-            close=p["close"], name="Price", visible=show))
-        fig.add_trace(go.Scatter(
-            x=p["date"], y=sma, name="10-day avg", visible=show,
-            line=dict(color="#8a5cf6", width=1.5)))
-        fig.add_trace(go.Scatter(
-            x=x_ends, y=[r["support"]] * 2, name="Support", visible=show,
-            line=dict(color="green", dash="dash")))
-        fig.add_trace(go.Scatter(
-            x=x_ends, y=[r["resistance"]] * 2, name="Resistance", visible=show,
-            line=dict(color="red", dash="dash")))
+        fig.add_trace(
+            go.Candlestick(
+                x=p["date"],
+                open=p["open"],
+                high=p["high"],
+                low=p["low"],
+                close=p["close"],
+                name="Price",
+                visible=show,
+            )
+        )
+        fig.add_trace(
+            go.Scatter(
+                x=p["date"],
+                y=sma,
+                name="10-day avg",
+                visible=show,
+                line=dict(color="#8a5cf6", width=1.5),
+            )
+        )
+        fig.add_trace(
+            go.Scatter(
+                x=x_ends,
+                y=[r["support"]] * 2,
+                name="Support",
+                visible=show,
+                line=dict(color="green", dash="dash"),
+            )
+        )
+        fig.add_trace(
+            go.Scatter(
+                x=x_ends,
+                y=[r["resistance"]] * 2,
+                name="Resistance",
+                visible=show,
+                line=dict(color="red", dash="dash"),
+            )
+        )
 
     n = len(summary)
     buttons = []
@@ -88,19 +135,34 @@ def chart_prices():
         vis = [False] * (4 * n)
         for k in range(4):
             vis[4 * i + k] = True
-        buttons.append(dict(
-            label=r["label"], method="update",
-                        args=[{"visible": vis}, {"title.text": f"{r['label']} - last 90 days"}]))
+        buttons.append(
+            dict(
+                label=r["label"],
+                method="update",
+                args=[{"visible": vis}, {"title.text": f"{r['label']} - last 90 days"}],
+            )
+        )
     fig.update_layout(
-                title=dict(text=f"{summary['label'].iloc[0]} - last 90 days",
-                   x=1, xanchor="right"),
-                updatemenus=[dict(buttons=buttons, direction="down",
-                          x=0, y=1.22, xanchor="left",
-                          bgcolor="#ffffff", bordercolor="#aaaaaa",
-                          font=dict(color="#222222"))],
-        xaxis_rangeslider_visible=False, height=480,
+        title=dict(
+            text=f"{summary['label'].iloc[0]} - last 90 days", x=1, xanchor="right"
+        ),
+        updatemenus=[
+            dict(
+                buttons=buttons,
+                direction="down",
+                x=0,
+                y=1.22,
+                xanchor="left",
+                bgcolor="#ffffff",
+                bordercolor="#aaaaaa",
+                font=dict(color="#222222"),
+            )
+        ],
+        xaxis_rangeslider_visible=False,
+        height=480,
         margin=dict(t=90, b=40, l=50, r=20),
-        legend=dict(orientation="h", y=-0.15))
+        legend=dict(orientation="h", y=-0.15),
+    )
     fig.update_xaxes(rangebreaks=[dict(bounds=["sat", "mon"])])
     return fig
 
@@ -114,11 +176,25 @@ def td(display, value, cls=""):
 
 
 def table_html():
-    head = ["#", "Asset", "Ticker", "Price", "1d %", "Sentiment", "Social",
-            "News", "Direction", "Position", "Confidence", "Support",
-            "Resistance", "Social posts", "News items", "Flag"]
-    th = "".join(f'<th onclick="sortTable({i})">{h}</th>'
-                 for i, h in enumerate(head))
+    head = [
+        "#",
+        "Asset",
+        "Ticker",
+        "Price",
+        "1d %",
+        "Sentiment",
+        "Social",
+        "News",
+        "Direction",
+        "Position",
+        "Confidence",
+        "Support",
+        "Resistance",
+        "Social posts",
+        "News items",
+        "Flag",
+    ]
+    th = "".join(f'<th onclick="sortTable({i})">{h}</th>' for i, h in enumerate(head))
     rows = ""
     for i, r in summary.iterrows():
         flag = "DIVERGENCE" if r["divergence"] else ""
@@ -151,13 +227,16 @@ def cards_html():
     n_pos = int(summary["position"].isin(["LONG", "SHORT"]).sum())
     items = [
         ("Most bullish", f"{bull['asset_name']} ({bull['sentiment']:+.2f})"),
-        ("Most discussed on LIHKG",
-         f"{talk['asset_name']} ({int(talk['social_mentions'])} posts)"),
+        (
+            "Most discussed on LIHKG",
+            f"{talk['asset_name']} ({int(talk['social_mentions'])} posts)",
+        ),
         ("Social vs news divergence", f"{n_div} stock(s)"),
         ("Active positions", f"{n_pos} of {len(summary)}"),
     ]
-    return "".join(f'<div class="card"><span>{a}</span><b>{b}</b></div>'
-                   for a, b in items)
+    return "".join(
+        f'<div class="card"><span>{a}</span><b>{b}</b></div>' for a, b in items
+    )
 
 
 def df_html(df):
@@ -174,9 +253,12 @@ def extra_sections():
         out += "<h2>Prediction vs actual</h2>" + df_html(check)
     bt = read_csv_safe("reports/backtest_metrics.csv")
     if bt is not None:
-        out += ("<h2>Walk-forward test (out-of-sample)</h2>" + df_html(bt)
-                + '<p class="note">Lower MAPE is better. Beating the naive row '
-                  'means the model adds value.</p>')
+        out += (
+            "<h2>Walk-forward test (out-of-sample)</h2>"
+            + df_html(bt)
+            + '<p class="note">Lower MAPE is better. Beating the naive row '
+            "means the model adds value.</p>"
+        )
     return out
 
 
@@ -309,14 +391,15 @@ window.addEventListener("load", function () {
 
 def main():
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    html = (TEMPLATE
-            .replace("__NOW__", now)
-            .replace("__CARDS__", cards_html())
-                        .replace("__TABLE__", stock_cards() + "<h2>Ranked table</h2>" + table_html())
-            .replace("__MENTIONS__", fig_html(chart_mentions(), first=True))
-            .replace("__SENTIMENT__", fig_html(chart_sentiment()))
-            .replace("__PRICES__", fig_html(chart_prices()))
-                        .replace("__EXTRA__", heatmap_html() + evidence_html() + extra_sections()))
+    html = (
+        TEMPLATE.replace("__NOW__", now)
+        .replace("__CARDS__", cards_html())
+        .replace("__TABLE__", stock_cards() + "<h2>Ranked table</h2>" + table_html())
+        .replace("__MENTIONS__", fig_html(chart_mentions(), first=True))
+        .replace("__SENTIMENT__", fig_html(chart_sentiment()))
+        .replace("__PRICES__", fig_html(chart_prices()))
+        .replace("__EXTRA__", heatmap_html() + evidence_html() + extra_sections())
+    )
     with open("reports/report.html", "w", encoding="utf-8") as f:
         f.write(html)
     print("Saved reports/report.html")

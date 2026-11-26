@@ -33,14 +33,16 @@ def fetch_news(ticker, name):
     articles = []
     for r in results.results:
         highlights = getattr(r, "highlights", None) or []
-        articles.append({
-            "ticker": ticker,
-            "asset_name": name,
-            "title": r.title,
-            "url": r.url,
-            "published_date": r.published_date,
-            "text": " ".join(highlights),
-        })
+        articles.append(
+            {
+                "ticker": ticker,
+                "asset_name": name,
+                "title": r.title,
+                "url": r.url,
+                "published_date": r.published_date,
+                "text": " ".join(highlights),
+            }
+        )
     return articles
 
 

@@ -1,8 +1,8 @@
 import pandas as pd
 
 BULL, BEAR = 0.15, -0.15
-LOOKBACK = 20   # support/resistance ke liye din
-SMA_DAYS = 10   # trend ke liye average
+LOOKBACK = 20  # support/resistance ke liye din
+SMA_DAYS = 10  # trend ke liye average
 
 
 def weighted_mean(df):
@@ -60,36 +60,49 @@ def main():
             position = "FLAT"
 
         divergence = (
-            s_social is not None and s_news is not None
-            and s_social * s_news < 0 and abs(s_social - s_news) >= 0.4
+            s_social is not None
+            and s_news is not None
+            and s_social * s_news < 0
+            and abs(s_social - s_news) >= 0.4
         )
 
-        rows.append({
-            "ticker": ticker,
-            "asset_name": p["asset_name"].iloc[0],
-            "price": round(close, 2),
-            "change_pct": round((close / prev - 1) * 100, 2),
-            "sentiment": round(overall, 2),
-            "social_sentiment": None if s_social is None else round(s_social, 2),
-            "news_sentiment": None if s_news is None else round(s_news, 2),
-            "direction": direction,
-            "position": position,
-            "confidence": get_confidence(len(it), overall),
-            "support": round(support, 2),
-            "resistance": round(resistance, 2),
-            "to_support_pct": round((close / support - 1) * 100, 1),
-            "to_resistance_pct": round((resistance / close - 1) * 100, 1),
-            "social_mentions": len(social),
-            "news_mentions": len(news),
-            "divergence": divergence,
-        })
+        rows.append(
+            {
+                "ticker": ticker,
+                "asset_name": p["asset_name"].iloc[0],
+                "price": round(close, 2),
+                "change_pct": round((close / prev - 1) * 100, 2),
+                "sentiment": round(overall, 2),
+                "social_sentiment": None if s_social is None else round(s_social, 2),
+                "news_sentiment": None if s_news is None else round(s_news, 2),
+                "direction": direction,
+                "position": position,
+                "confidence": get_confidence(len(it), overall),
+                "support": round(support, 2),
+                "resistance": round(resistance, 2),
+                "to_support_pct": round((close / support - 1) * 100, 1),
+                "to_resistance_pct": round((resistance / close - 1) * 100, 1),
+                "social_mentions": len(social),
+                "news_mentions": len(news),
+                "divergence": divergence,
+            }
+        )
 
     out = pd.DataFrame(rows)
     out = out.sort_values(["social_mentions", "sentiment"], ascending=False)
     out.to_csv("data/ticker_summary.csv", index=False)
 
-    cols = ["ticker", "price", "sentiment", "direction", "position",
-            "support", "resistance", "social_mentions", "divergence"]
+    cols = [
+        "ticker",
+        "price",
+        "sentiment",
+        "direction",
+        "position",
+        "support",
+        "resistance",
+        "social_mentions",
+        "divergence",
+    ]
     print(out[cols].to_string(index=False))
 
 
